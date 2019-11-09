@@ -1,8 +1,9 @@
 from wsgiref.simple_server import make_server
 from pyramid.config import Configurator
 from pyramid.response import Response
-
+import json
 import logging
+from auth import Auth
 
 SERVER_PORT = 6543
 SERVER_HOST = "127.0.0.1"
@@ -24,13 +25,12 @@ def api_request(request):
 
 
 def test_request(api):
-
+    
     return Response("Hello World")
 
 def auth(request):
-    logging.debug("Auth Request Recieved")
-    logging.info(request.GET['data'])
-    return Response(request.POST['data'])
+    token = Auth(request).getToken()
+    return Response("Recieved")
 
 SERVER_ROUTES = [
     ("api", "/api", api_request),
@@ -40,7 +40,7 @@ SERVER_ROUTES = [
 
 # START THE SERVER
 if __name__ == '__main__':
-    logging.basicConfig(filename='server.log', filemode='w', level=logging.DEBUG, format='%(levelname)s - %(message)s')
+    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
     logging.debug("Configuring Server...")
     with Configurator() as config:
         for route, path, method in SERVER_ROUTES:
