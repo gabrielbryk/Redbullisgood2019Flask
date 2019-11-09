@@ -11,7 +11,7 @@ def auth(request):
 
 
 if __name__ == '__main__':
-  logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
+  logging.basicConfig(filename='server.log', filemode='w', level=logging.DEBUG, format='%(levelname)s - %(message)s')
   with Configurator() as config:
       config.add_route('auth', '/auth')
       config.add_view(auth, route_name='auth')
