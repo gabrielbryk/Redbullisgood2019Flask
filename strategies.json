@@ -1,19 +1,22 @@
 [
   {
-    "name": "Strategy 1",
-    "backtest_id": "abxabsgh38q9hsad",
+    "name": "Paired switching algorithm",
+    "algorithm_id": 3383088,
+    "backtest_id": "fce68177edd4066fb4bf54ec9c1e56b5",
     "stats": {}
   },
 
   {
-    "name": "Strategy 2",
-    "backtest_id": "asd09u320",
+    "name": "Mean reversion statistical arbitrage algorithm",
+    "algorithm_id": 3385763,
+    "backtest_id": "b61a205f2037316e957e8e50aa34835e",
     "stats": {}
   },
 
   {
-    "name": "Strategy 3",
-    "backtest_id": "abxabsgh38q9320990sajdhsad",
+    "name": "Expected idiosyncratic skewness algorithm",
+    "algorithm_id": 3385792,
+    "backtest_id": "cf2087e486ac230d5a9546f69f5f2917",
     "stats": {}
   }
 ]
