@@ -1,6 +1,7 @@
 from wsgiref.simple_server import make_server
 from pyramid.config import Configurator
 from pyramid.response import Response
+import logging
 
 
 def auth(request):
@@ -15,5 +16,5 @@ if __name__ == '__main__':
         config.add_view(auth, route_name='auth')
         app = config.make_wsgi_app()
     server = make_server('127.0.0.1', 8080, app)
-    print("Server Loaded")
+    logging.info("Server Loaded")
     server.serve_forever()
