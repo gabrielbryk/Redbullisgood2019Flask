@@ -5,7 +5,7 @@ import logging
 
 
 def auth(request):
-  print(request.GET['data'] )
+  logging.debug(request.GET['data'] )
   return Response(request.POST['data'])
    
 
