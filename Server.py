@@ -5,7 +5,7 @@ from pyramid.response import Response
 import logging
 
 SERVER_PORT = 6543
-SERVER_HOST = "0.0.0.0"
+SERVER_HOST = "127.0.0.1"
 
 
 def api_request(request):
@@ -28,7 +28,8 @@ def test_request(api):
     return Response("Hello World")
 
 def auth(request):
-    logging.info(request.GET['data'] )
+    logging.debug("Auth Request Recieved")
+    logging.info(request.GET['data'])
     return Response(request.POST['data'])
 
 SERVER_ROUTES = [
@@ -49,7 +50,7 @@ if __name__ == '__main__':
         app = config.make_wsgi_app()
 
     logging.debug("Starting Server...")
-    server = make_server("0.0.0.0", 6543, app)
+    server = make_server(SERVER_HOST, SERVER_PORT, app)
     logging.debug("Server Running on "+SERVER_HOST+":"+str(SERVER_PORT))
     server.serve_forever()
 
