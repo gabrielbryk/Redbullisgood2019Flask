@@ -5,7 +5,7 @@ from pyramid.response import Response
 
 def auth(request):
   print(request.GET['data'] )
-  return Response(request.GET['data'])
+  return Response(request.POST['data'])
    
 
 
