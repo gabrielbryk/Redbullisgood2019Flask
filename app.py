@@ -15,4 +15,5 @@ if __name__ == '__main__':
         config.add_view(auth, route_name='auth')
         app = config.make_wsgi_app()
     server = make_server('127.0.0.1', 8080, app)
+    print("Server Loaded")
     server.serve_forever()
