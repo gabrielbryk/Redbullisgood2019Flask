@@ -3,11 +3,11 @@ from sys import getsizeof
 import json
 
 class QuantConnector:
-    def getReport(algoID, backtestID):
+    def getReport(self, algoID, backtestID):
         quant = Api(88707, "84f84df437a2bfe887962a4d09d9a28967c4f69d1297b53ee7e40f49259f1015")
 
         backtest = {}
-
+        report = quant.read_backtest(algoID, backtestID)
         p = quant.list_projects()
 
         backtest['stats'] = report
@@ -22,11 +22,15 @@ class QuantConnector:
         obj = json.loads(data)
         return obj
 
-    def percentReturn(algoID, backtestID, investment):
-        backtest = getReport(algoID, backtestID)
-        percent = backtest['stats']['result']["TotalPerformance"]["PortfolioStatistics"]["Return"]
-        return percent * investment + investment
-    
+    def percentReturn(self, algoID, backtestID, investment):
+        backtest = self.getReport(algoID, backtestID)
+        percent = backtest['stats']['result']["RuntimeStatistics"]["Return"]
+
+        strreturn = percent.replace('%', '')
+        strreturn = float(strreturn.replace(' ','')) / 100
+        totalReturn = strreturn * investment + investment
+
+        return {"net":totalReturn, "profit": strreturn * investment}
 
 #     # for data in p["projects"]:
 #     #     print(data)
