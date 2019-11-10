@@ -2,31 +2,68 @@ from wsgiref.simple_server import make_server
 from pyramid.config import Configurator
 from pyramid.response import Response
 from quantapp import QuantConnector
+from Transaction import Transaction
 import json
 import logging
 
 SERVER_PORT = 6543
 SERVER_HOST = "0.0.0.0"
-API_MODE = "GET"
+
+QuantAPI = QuantConnector()
+TransactionAPI = Transaction()
+
+def authenticate(token):
+    return True
 
 
 def api_request(request):
-    global API_MODE
-    if 'request' not in request.GET and 'request' not in request.POST:
+    global QuantAPI
+
+    # CHECK IF PARAMS ARE SET
+    if 'request' not in request.GET or 'auth_token' not in request.GET:
         return Response("Invalid Request")
+
+    # USER AUTH
+    if not authenticate(request.GET['auth_token']):
+        return Response("Not logged in")
 
     req = request.GET['request']
 
-    if req == "strategies":
-        return Response(json.dumps(QuantConnector.getStrategies()))
+    try:
+        if req == "strategies":
+            strategies = QuantAPI.getStrategies()
 
-    if req == "strategy":
-        algoID = request.GET['algoID']
-        backtestID = request.GET['backtestID']
+            new_data = []
+            for strategy in strategies:
+                stats = QuantAPI.basicStats(strategy['algorithm_id'], strategy['backtest_id'])
+                strategy['stats'] = stats
+                new_data.append(strategy)
 
-        data = QuantConnector.getReport(algoID, backtestID)
+            return Response(json.dumps(new_data))
 
-        return Response(json.dumps(data))
+        if req == "strategy":
+            algoID = request.GET['algoID']
+            backtestID = request.GET['backtestID']
+
+            return Response(json.dumps(QuantAPI.getReport(algoID,backtestID)))
+
+        if req == "invest":
+            amount = request.GET['amount']
+            algoID = request.GET['algoID']
+            backtestID = request.GET['backtestID']
+
+            result = QuantAPI.percentReturn( algoID, backtestID, amount)
+
+            return Response(json.dumps(result))
+
+        if req == "strategy_stats":
+
+            return Response("")
+
+    except Exception as e:
+        return Response("Error while processing your request "+str(e))
+    finally:
+        pass
 
     return Response("")
 
