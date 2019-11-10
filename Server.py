@@ -111,7 +111,7 @@ SERVER_ROUTES = [
 
 # START THE SERVER
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
+    logging.basicConfig(filename='server.log', filemode='w', level=logging.DEBUG, format='%(levelname)s - %(message)s')
     logging.debug("Configuring Server...")
     with Configurator() as config:
         for route, path, method in SERVER_ROUTES:
