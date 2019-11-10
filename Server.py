@@ -12,10 +12,6 @@ API_MODE = "GET"
 
 def api_request(request):
 
-    # PARSE POST DATA
-    post_data = request.body.decode("utf8")
-    request.POST = json.loads(post_data)
-
     if 'request' not in request.GET and 'request' not in request.POST:
         return Response("Invalid Request")
 
