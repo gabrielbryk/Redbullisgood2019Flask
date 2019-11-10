@@ -11,11 +11,11 @@ API_MODE = "GET"
 
 
 def api_request(request):
-
+    global API_MODE
     if 'request' not in request.GET and 'request' not in request.POST:
         return Response("Invalid Request")
 
-    req = request[API_MODE]['request']
+    req = request.GET['request']
 
     if req == "strategies":
         return Response(json.dumps(QuantConnector.getStrategies()))
