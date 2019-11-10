@@ -34,9 +34,9 @@ def api_request(request):
 
             new_data = []
             for strategy in strategies:
-                report = QuantAPI.getReport(strategy['algorithm_id'], strategy['backtest_id'])
+                #report = QuantAPI.getReport(strategy['algorithm_id'], strategy['backtest_id'])
                 stats = QuantAPI.basicStats(strategy['algorithm_id'], strategy['backtest_id'])
-                strategy['report'] = report
+                #strategy['report'] = report
                 strategy['stats'] = stats
                 new_data.append(strategy)
 
