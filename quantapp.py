@@ -21,7 +21,7 @@ class QuantConnector:
         with open('strategies.json') as file:
             data = json.load(file)
 
-        return file
+        return data
 
 #     # for data in p["projects"]:
 #     #     print(data)
