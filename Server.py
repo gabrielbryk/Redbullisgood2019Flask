@@ -20,12 +20,8 @@ def api_request(request):
     global QuantAPI
 
     # CHECK IF PARAMS ARE SET
-    if 'request' not in request.GET or 'auth_token' not in request.GET:
+    if 'request' not in request.GET:
         return Response("Invalid Request")
-
-    # USER AUTH
-    if not authenticate(request.GET['auth_token']):
-        return Response("Not logged in")
 
     req = request.GET['request']
 
