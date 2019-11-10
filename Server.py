@@ -52,6 +52,11 @@ def api_request(request):
 
             return Response(json.dumps(result))
 
+        if req == "user_balance":
+            balance = TransactionAPI.getUserBalance(request.GET['username'])
+
+            return Response(json.dumps({'balance':balance}))
+
         if req == "strategy_stats":
 
             return Response("")
