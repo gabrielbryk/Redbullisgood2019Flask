@@ -6,7 +6,7 @@ from Transaction import Transaction
 from Notification import Notification
 import json
 import logging
-
+import time
 SERVER_PORT = 6543
 SERVER_HOST = "0.0.0.0"
 
@@ -20,10 +20,11 @@ def authenticate(token):
 
 def api_request(request):
     global QuantAPI
-
+    s = time.time()
     # CHECK IF PARAMS ARE SET
+    response = ""
     if 'request' not in request.GET:
-        return Response("Invalid Request")
+        response =  Response("Invalid Request")
 
     req = request.GET['request']
 
@@ -33,17 +34,19 @@ def api_request(request):
 
             new_data = []
             for strategy in strategies:
+                report = QuantAPI.getReport(strategy['algorithm_id'], strategy['backtest_id'])
                 stats = QuantAPI.basicStats(strategy['algorithm_id'], strategy['backtest_id'])
+                strategy['report'] = report
                 strategy['stats'] = stats
                 new_data.append(strategy)
 
-            return Response(json.dumps(new_data))
+            response =  Response(json.dumps(new_data))
 
         if req == "strategy":
             algoID = request.GET['algoID']
             backtestID = request.GET['backtestID']
 
-            return Response(json.dumps(QuantAPI.getReport(algoID,backtestID)))
+            response =  Response(json.dumps(QuantAPI.getReport(algoID,backtestID)))
 
         if req == "invest":
             amount = float(request.GET['amount'])
@@ -61,16 +64,16 @@ def api_request(request):
 
             NotificationAPI.send_sms(transaction_message, "+13123940768")
 
-            return Response(json.dumps(transaction))
+            response =  Response(json.dumps(transaction))
 
         if req == "user_balance":
             balance = TransactionAPI.getUserBalance(request.GET['username'])
 
-            return Response(json.dumps(balance))
+            response =  Response(json.dumps(balance))
 
         if req == "user_balance_history":
             username = request.GET['username']
-            return Response(json.dumps(TransactionAPI.get_transaction_history(username)))
+            response =  Response(json.dumps(TransactionAPI.get_transaction_history(username)))
 
         if req == "transaction":
             username = request.GET['username']
@@ -78,11 +81,15 @@ def api_request(request):
 
             transaction = TransactionAPI.make_new_transaction(username, amount)
 
-            return Response(json.dumps(transaction))
+            response = Response(json.dumps(transaction))
 
         if req == "strategy_stats":
 
-            return Response("")
+            response = Response("")
+
+        t = time.time()-s
+        logging.info("Response Processing Time: " + t)
+        return Response(response)
 
     except Exception as e:
         return Response("Error while processing your request "+str(e))
