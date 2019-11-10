@@ -28,73 +28,68 @@ def api_request(request):
 
     req = request.GET['request']
 
-    try:
-        if req == "strategies":
-            strategies = QuantAPI.getStrategies()
+    if req == "strategies":
+        strategies = QuantAPI.getStrategies()
 
-            new_data = []
-            for strategy in strategies:
-                report = QuantAPI.getReport(strategy['algorithm_id'], strategy['backtest_id'])
-                stats = QuantAPI.basicStats(strategy['algorithm_id'], strategy['backtest_id'])
-                strategy['report'] = report
-                strategy['stats'] = stats
-                new_data.append(strategy)
+        new_data = []
+        for strategy in strategies:
+            report = QuantAPI.getReport(strategy['algorithm_id'], strategy['backtest_id'])
+            stats = QuantAPI.basicStats(strategy['algorithm_id'], strategy['backtest_id'])
+            strategy['report'] = report
+            strategy['stats'] = stats
+            new_data.append(strategy)
 
-            response =  Response(json.dumps(new_data))
+        response =  Response(json.dumps(new_data))
 
-        if req == "strategy":
-            algoID = request.GET['algoID']
-            backtestID = request.GET['backtestID']
+    if req == "strategy":
+        algoID = request.GET['algoID']
+        backtestID = request.GET['backtestID']
 
-            response =  Response(json.dumps(QuantAPI.getReport(algoID,backtestID)))
+        response =  Response(json.dumps(QuantAPI.getReport(algoID,backtestID)))
 
-        if req == "invest":
-            amount = float(request.GET['amount'])
-            algoID = request.GET['algoID']
-            backtestID = request.GET['backtestID']
-            username = request.GET['username']
+    if req == "invest":
+        amount = float(request.GET['amount'])
+        algoID = request.GET['algoID']
+        backtestID = request.GET['backtestID']
+        username = request.GET['username']
 
-            result = QuantAPI.percentReturn( algoID, backtestID, amount)
+        result = QuantAPI.percentReturn( algoID, backtestID, amount)
 
-            transaction = TransactionAPI.make_new_transaction( username, result['net'] )
+        transaction = TransactionAPI.make_new_transaction( username, result['net'] )
 
-            transaction_id = transaction['transaction_id']
-            transaction_message = "Your transaction (#"+transaction_id+") has been completed with a net return of $"+str(result['net'])+"." \
-            + " Your new balance is $"+str(transaction['balance'])
+        transaction_id = transaction['transaction_id']
+        transaction_message = "Your transaction (#"+transaction_id+") has been completed with a net return of $"+str(result['net'])+"." \
+        + " Your new balance is $"+str(transaction['balance'])
 
-            NotificationAPI.send_sms(transaction_message, "+13123940768")
+        NotificationAPI.send_sms(transaction_message, "+13123940768")
 
-            response =  Response(json.dumps(transaction))
+        response =  Response(json.dumps(transaction))
 
-        if req == "user_balance":
-            balance = TransactionAPI.getUserBalance(request.GET['username'])
+    if req == "user_balance":
+        balance = TransactionAPI.getUserBalance(request.GET['username'])
 
-            response =  Response(json.dumps(balance))
+        response =  Response(json.dumps(balance))
 
-        if req == "user_balance_history":
-            username = request.GET['username']
-            response =  Response(json.dumps(TransactionAPI.get_transaction_history(username)))
+    if req == "user_balance_history":
+        username = request.GET['username']
+        response =  Response(json.dumps(TransactionAPI.get_transaction_history(username)))
 
-        if req == "transaction":
-            username = request.GET['username']
-            amount = request.GET['amount']
+    if req == "transaction":
+        username = request.GET['username']
+        amount = request.GET['amount']
 
-            transaction = TransactionAPI.make_new_transaction(username, amount)
+        transaction = TransactionAPI.make_new_transaction(username, amount)
 
-            response = Response(json.dumps(transaction))
+        response = Response(json.dumps(transaction))
 
-        if req == "strategy_stats":
-
-            response = Response("")
+    if req == "strategy_stats":
+        response = Response("")
 
         t = time.time()-s
         logging.info("Response Processing Time: " + str(t))
-        return (response)
 
-    except Exception as e:
-        return Response("Error while processing your request "+str(e))
-    finally:
-        pass
+    return response
+
 
     return Response("")
 
