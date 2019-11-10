@@ -17,7 +17,7 @@ class QuantConnector:
 
         return backtest
 
-    def getStrategies(self):
+    def getStrategies():
         with open('strategies.json') as file:
             data = json.load(file)
 
