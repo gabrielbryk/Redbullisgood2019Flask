@@ -2,26 +2,31 @@ from quantconnect.api import Api
 from sys import getsizeof
 import json
 
-
 class QuantConnector:
-
     def getReport(algoID, backtestID):
         quant = Api(88707, "84f84df437a2bfe887962a4d09d9a28967c4f69d1297b53ee7e40f49259f1015")
 
         backtest = {}
 
-        report = quant.read_backtest(algoID, backtestID)
         p = quant.list_projects()
 
         backtest['stats'] = report
 
         return backtest
 
+    
     def getStrategies():
         with open('strategies.json') as file:
-            data = json.load(file)
+            data = file.read()
 
-        return data
+        obj = json.loads(data)
+        return obj
+
+    def percentReturn(algoID, backtestID, investment):
+        backtest = getReport(algoID, backtestID)
+        percent = backtest['stats']['result']["TotalPerformance"]["PortfolioStatistics"]["Return"]
+        return percent * investment + investment
+    
 
 #     # for data in p["projects"]:
 #     #     print(data)
