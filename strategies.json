@@ -3,20 +3,23 @@
     "name": "Paired switching algorithm",
     "algorithm_id": 3383088,
     "backtest_id": "fce68177edd4066fb4bf54ec9c1e56b5",
-    "stats": {}
+    "stats": {},
+    "description": "Paired switching is a strategy where in its simplest form, investors pick two assets that are negatively correlated and periodically switch position based on their relative performance. The idea behind this strategy is that if the assets are negatively correlated, then a traditional mixed portfolio might lead to a lower return than the return for the individual assets. If the negative correlation exists, switching positions could improve the performance of a portfolio where two assets are statically weighted."
   },
 
   {
     "name": "Mean reversion statistical arbitrage algorithm",
     "algorithm_id": 3385763,
     "backtest_id": "b61a205f2037316e957e8e50aa34835e",
-    "stats": {}
+    "stats": {},
+    "description": "This algorithm implements a strategy that trades stocks with low expected idiosyncratic skewness based on a paper by Boyer, Mitton and Vorkink (2009, hereafter BMV) published in The Review of Financial Studies. Our implementation narrows down our initial universe to liquid assets by selecting 200 stocks based on daily trading volume, price and whether the stock has fundamental data in our data library. We calculate the expected idiosyncratic skewness at the end of each month and sort our universe based on the calculated skewness. This implementation will long the bottom 5%, hold for the next month, and rebalance the portfolio monthly. BMV tests recent theories that stocks with low idiosyncratic skewness should have high expected returns."
   },
 
   {
     "name": "Expected idiosyncratic skewness algorithm",
     "algorithm_id": 3385792,
     "backtest_id": "cf2087e486ac230d5a9546f69f5f2917",
-    "stats": {}
+    "stats": {},
+    "description": "Statistical arbitrage strategies uses mean-reversion models to take advantage of pricing inefficiencies between groups of correlated securities. This class of short-term financial trading strategies produce moves that can contrarian to the broader market movement and are often discussed in conjunction with Pairs Trading. In our algorithm, we will be using a PCA-based approach as opposed to an ETF-based approach to limit our universe of stocks. To tune the model, we could expand our universe of stocks beyond the current 20 equities or incorporate more PCA components. We could also come up with another way to measure the level of deviation or change the rebalance frequency of the algorithm (30 days in this example)."
   }
 ]
