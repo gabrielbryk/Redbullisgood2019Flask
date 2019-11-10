@@ -6,7 +6,7 @@ import json
 import logging
 
 SERVER_PORT = 6543
-SERVER_HOST = "127.0.0.1"
+SERVER_HOST = "0.0.0.0"
 API_MODE = "GET"
 
 
