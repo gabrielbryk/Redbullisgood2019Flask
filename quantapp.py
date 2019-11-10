@@ -40,7 +40,7 @@ netProfit = report['result']["TotalPerformance"]["TradeStatistics"]["TotalProfit
 averageProfit = report['result']["TotalPerformance"]["TradeStatistics"]["AverageProfit"]
 averageLoss = report['result']["TotalPerformance"]["TradeStatistics"]["AverageLoss"]
 
-
+print(equityChart)
 
 def getEquityChart():
     return equityChart
