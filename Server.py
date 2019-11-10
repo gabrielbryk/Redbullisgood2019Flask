@@ -1,41 +1,42 @@
 from wsgiref.simple_server import make_server
 from pyramid.config import Configurator
 from pyramid.response import Response
+from quantapp import QuantConnector
 import json
 import logging
-from auth import Auth
 
 SERVER_PORT = 6543
 SERVER_HOST = "127.0.0.1"
+API_MODE = "GET"
 
 
 def api_request(request):
-    if not request.GET['request']: return Response("")
 
-    req = request.GET['request']
+    # PARSE POST DATA
+    post_data = request.body.decode("utf8")
+    request.POST = json.loads(post_data)
+
+    if 'request' not in request.GET and 'request' not in request.POST:
+        return Response("Invalid Request")
+
+    req = request[API_MODE]['request']
 
     if req == "strategies":
-        return Response("")
+        return Response(json.dumps(QuantConnector.getStrategies()))
 
     if req == "strategy":
-        strategy_id = request.GET['id']
-        return Response("")
+        algoID = request.GET['algoID']
+        backtestID = request.GET['backtestID']
+
+        data = QuantConnector.getReport(algoID, backtestID)
+
+        return Response(json.dumps(data))
 
     return Response("")
 
 
-def test_request(api):
-    
-    return Response("Hello World")
-
-def auth(request):
-    token = Auth(request).getToken()
-    return Response("Recieved")
-
 SERVER_ROUTES = [
-    ("api", "/api", api_request),
-    ("hello", "/", test_request),
-    ("auth", "/auth", auth)
+    ("api", "/api", api_request)
 ]
 
 # START THE SERVER
