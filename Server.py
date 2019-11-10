@@ -22,7 +22,7 @@ def api_request(request):
     global QuantAPI
     s = time.time()
     # CHECK IF PARAMS ARE SET
-    response = Resonse("")
+    response = Response("")
     if 'request' not in request.GET:
         response =  Response("Invalid Request")
 
