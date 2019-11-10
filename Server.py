@@ -56,7 +56,7 @@ def api_request(request):
             transaction = TransactionAPI.make_new_transaction( username, result['net'] )
 
             transaction_id = transaction['transaction_id']
-            transaction_message = "Your transaction (# "+transaction_id+") has been completed with a net return of $"+str(result['net'])+"." \
+            transaction_message = "Your transaction (#"+transaction_id+") has been completed with a net return of $"+str(result['net'])+"." \
             + " Your new balance is $"+str(transaction['balance'])
 
             NotificationAPI.send_sms(transaction_message, "+13123940768")
@@ -92,8 +92,13 @@ def api_request(request):
     return Response("")
 
 
+def default_page(request):
+    return Response("StrataCloud Application Server Is Live!")
+
+
 SERVER_ROUTES = [
-    ("api", "/api", api_request)
+    ("api", "/api", api_request),
+    ("index","/", default_page)
 ]
 
 # START THE SERVER
