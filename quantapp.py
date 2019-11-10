@@ -31,6 +31,30 @@ class QuantConnector:
         totalReturn = strreturn * investment + investment
 
         return {"net":totalReturn, "profit": strreturn * investment}
+    
+    def returnGraphs(self, algoID, backtestID):
+        backtest = self.getReport(algoID, backtestID)
+        eqgraph = backtest['stats']['result']['Charts']["Strategy Equity"]["Series"]["Equity"]["Values"]        
+        performancegraph = backtest['stats']['result']['Charts']["Strategy Equity"]["Series"]["Daily Performance"]["Values"]
+
+        return {"eqgraph": eqgraph, "performancegraph": performancegraph}
+
+    def basicStats(self, algoID, backtestID):
+        #name
+        #description
+        #eqgraph
+        backtest = self.getReport(algoID, backtestID)
+        
+        equity = backtest['stats']['result']["RuntimeStatistics"]["Equity"]
+        totalFees = backtest['stats']['result']["TotalPerformance"]["TradeStatistics"]["TotalFees"]
+        netProfit = backtest['stats']['result']["TotalPerformance"]["TradeStatistics"]["TotalProfitLoss"]
+        averageProfit = backtest['stats']['result']["TotalPerformance"]["TradeStatistics"]["AverageProfit"]
+        averageLoss = backtest['stats']['result']["TotalPerformance"]["TradeStatistics"]["AverageLoss"]
+
+        return {"equity": equity, "totalFees": totalFees, "netProfit": netProfit, "averageProfit": averageProfit, "averageLoss": averageLoss}
+    
+    # def andvancedStats(self, algoID, backtestID):
+    #     return {}
 
 #     # for data in p["projects"]:
 #     #     print(data)
@@ -40,6 +64,7 @@ class QuantConnector:
 #         exit()
 
 #     equityChart = report['result']['Charts']["Strategy Equity"]["Series"]["Equity"]["Values"]
+#     eqgraph = backtest['stats']['result']['Charts']["Strategy Equity"]["Series"]["Equity"]["Values"]
 #     dailyPerformanceChart = report['result']['Charts']["Strategy Equity"]["Series"]["Daily Performance"]["Values"]
 
 #     equity = report['result']["RuntimeStatistics"]["Equity"]
