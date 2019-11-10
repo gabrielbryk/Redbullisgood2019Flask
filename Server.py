@@ -88,8 +88,8 @@ def api_request(request):
             response = Response("")
 
         t = time.time()-s
-        logging.info("Response Processing Time: " + t)
-        return Response(response)
+        logging.info("Response Processing Time: " + str(t))
+        return (response)
 
     except Exception as e:
         return Response("Error while processing your request "+str(e))
