@@ -51,10 +51,14 @@ def api_request(request):
             backtestID = request.GET['backtestID']
             username = request.GET['username']
 
-            result = QuantAPI.percentReturn( algoID, backtestID, amount)['net']
-            transaction = TransactionAPI.make_new_transaction( username, result )
+            result = QuantAPI.percentReturn( algoID, backtestID, amount)
 
-            transaction_message = "Your transaction (#A33121) has been completed with a net return of $"+str(result)+"."
+            transaction = TransactionAPI.make_new_transaction( username, result['net'] )
+
+            transaction_id = transaction['transaction_id']
+            transaction_message = "Your transaction (# "+transaction_id+") has been completed with a net return of $"+str(result['net'])+"." \
+            + " Your new balance is $"+str(transaction['balance'])
+
             NotificationAPI.send_sms(transaction_message, "+13123940768")
 
             return Response(json.dumps(transaction))
@@ -63,6 +67,10 @@ def api_request(request):
             balance = TransactionAPI.getUserBalance(request.GET['username'])
 
             return Response(json.dumps(balance))
+
+        if req == "user_balance_history":
+            username = request.GET['username']
+            return Response(json.dumps(TransactionAPI.get_transaction_history(username)))
 
         if req == "transaction":
             username = request.GET['username']
