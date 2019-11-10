@@ -8,12 +8,14 @@ class Transaction:
         self.database = self.dbclient['strategycloud']
 
     def make_new_transaction(self, username, amount):
-        balance = self.getUserBalance(username)
-        new_balance = int(balance) - int(amount)
+        balance = self.getUserBalance(username)['balance']
+        new_balance = int(balance) + int(amount)
 
-        pass
+        self.database['users'].update({"username":username},{"$set":{"wallet":new_balance}})
+
+        return self.getUserBalance(username)
 
     def getUserBalance(self, username):
         users = self.database['users']
         data = users.find_one({'username':username})
-        return data['wallet']
+        return {'balance':data['wallet']}

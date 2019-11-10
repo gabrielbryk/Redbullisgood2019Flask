@@ -44,18 +44,28 @@ def api_request(request):
             return Response(json.dumps(QuantAPI.getReport(algoID,backtestID)))
 
         if req == "invest":
-            amount = request.GET['amount']
+            amount = float(request.GET['amount'])
             algoID = request.GET['algoID']
             backtestID = request.GET['backtestID']
+            username = request.GET['username']
 
-            result = QuantAPI.percentReturn( algoID, backtestID, amount)
+            result = QuantAPI.percentReturn( algoID, backtestID, amount)['net']
+            transaction = TransactionAPI.make_new_transaction( username, result )
 
-            return Response(json.dumps(result))
+            return Response(json.dumps(transaction))
 
         if req == "user_balance":
             balance = TransactionAPI.getUserBalance(request.GET['username'])
 
-            return Response(json.dumps({'balance':balance}))
+            return Response(json.dumps(balance))
+
+        if req == "transaction":
+            username = request.GET['username']
+            amount = request.GET['amount']
+
+            transaction = TransactionAPI.make_new_transaction(username, amount)
+
+            return Response(json.dumps(transaction))
 
         if req == "strategy_stats":
 
