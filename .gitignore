@@ -4,5 +4,8 @@
 .vscode*
 .vscode/*
 
-.th/
-.th/*
+th/
+th/*
+
+__pycache__/
+__pycache__/*
