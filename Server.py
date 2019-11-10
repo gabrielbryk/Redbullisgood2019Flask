@@ -3,6 +3,7 @@ from pyramid.config import Configurator
 from pyramid.response import Response
 from quantapp import QuantConnector
 from Transaction import Transaction
+from Notification import Notification
 import json
 import logging
 
@@ -11,6 +12,7 @@ SERVER_HOST = "0.0.0.0"
 
 QuantAPI = QuantConnector()
 TransactionAPI = Transaction()
+NotificationAPI = Notification()
 
 def authenticate(token):
     return True
@@ -51,6 +53,9 @@ def api_request(request):
 
             result = QuantAPI.percentReturn( algoID, backtestID, amount)['net']
             transaction = TransactionAPI.make_new_transaction( username, result )
+
+            transaction_message = "Your transaction (#A33121) has been completed with a net return of $"+str(result)+"."
+            NotificationAPI.send_sms(transaction_message, "+13123940768")
 
             return Response(json.dumps(transaction))
 
